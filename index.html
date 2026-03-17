@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <title>Tower Challange</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: "Nunito" , sans-serif;
+            background: linear-gradient(  rgb(221, 147, 159) , rgb(255, 194, 203));
+        }
+        .main{
+            padding: 5px 125px;
+        }
+        .first{
+            background: linear-gradient( to right , rgb(251, 251, 227) , rgb(227, 244, 249));
+            padding: 25px;
+            border-radius: 25px;
+        }
+        
+        .timer{
+            background-color: white;
+            padding: 15px;
+            border: 3px solid lightblue;
+            border-radius: 20px;
+        }
+        
+        .h1{
+            font-family: "Nunito", sans-serif;
+            font-size: 55px;
+            font-weight: 600;
+            color: rgb(145, 213, 235);
+            margin: 10px 0;
+        }
+        h3{
+            margin: 8px 0;
+            font-weight: 700;
+            font-size: larger;
+        }
+        .buttons {
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 10px;
+            border: none;
+            font-family: "Nunito", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-right: 10px;
+        }
+
+
+        .start {
+            background-color: #ff6b81;
+            color: white;
+        }
+
+        .start:hover {
+            background-color: #ff4d6d;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .pause {
+            background-color: #e0e6ed;
+            color: #333;
+        }
+
+        .pause:hover {
+            background-color: #cfd8e3;
+
+       }
+
+       .reset {
+            background-color: #e0e6ed;
+            color: #333;
+        }
+
+        .reset:hover {
+            background-color: #cfd8e3;
+        }
+        .first h4{
+            color: orange;
+        }
+        .head{
+             font-size:42px;
+             font-weight: 700;
+        }
+        .main p{
+            color: rgb(86, 86, 86);
+        }
+        .second{
+            background-color: white;
+            padding: 15px;
+            border-radius: 25px;
+            border-top: 6px solid rgb(252, 176, 33);
+        }
+        .third{
+            background-color: white;
+            padding: 15px;
+            border-radius: 25px;
+            border-top: 6px solid lightblue;
+        }
+        .third ol li{
+            margin-bottom: 7px;
+        }
+        
+        .container {
+            width: 95%;              
+            max-width: 1300px;       
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 25px;      
+            border-top: 6px solid rgb(0, 218, 0);  
+        }
+
+        .plan-item {
+            background: #e3f0f3;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid #d0e2e7;
+        }
+        .plan-item.active {
+            background: #c8f7dc;
+            border: 1px solid #6fcf97;
+        }
+        
+
+        .score-container {
+  width: 94%;
+  max-width: 1300px;     
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 40px auto;
+  border-top: 6px solid #9b59b6;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+}
+
+.score-row {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;     /* elementlar yonma-yon, o‘ralmasin */
+}
+
+.score-item {
+  flex: 1 1 48%;         /* ikki element yonma-yon to‘g‘ri joylashadi */
+  display: flex;
+  flex-direction: column;
+}
+
+.score-item input {
+  padding: 14px 20px;    /* input ichidagi bo‘sh joy oshdi */
+  border: 1.5px solid #d0e2e7;
+  border-radius: 10px;
+  font-size: 18px;
+  outline-offset: 2px;
+  transition: border-color 0.3s;
+         /* input to‘liq kenglikda */
+}
+
+.score-item input:focus {
+  border-color: #9b59b6;
+  box-shadow: 0 0 5px #9b59b6aa;
+}
+
+.total {
+  font-weight: 700;
+  font-size: 22px;
+  margin-top: 15px;
+  color: #4a235a;
+}
+    </style>
+</head>
+<body>
+    <div class="main">
+    <div class="first">
+        <h4>EASY CLASS ACTIVITY</h4>
+        <h1 class="head">Tower Challenge (60 Minutes)</h1>
+        <p>Work in a team, Build the tallest tower that can hold a small object for 10 seconds.</p>
+        <div class="timer">
+            <p>Class Timer</p>
+            <h1 class="h1" id="time">60:00</h1>
+            <p>Now: 0-5 min: Teacher explains the challange</p>
+        </div>
+        <div class="buttons">
+        <button class="btn start" onclick="startTimer()">Start</button>
+        <button class="btn pause" onclick="pauseTimer()">Pause</button>
+        <button class="btn reset" onclick="resetTimer()">Reset</button>
+        </div>
+
+    <script>
+        let totalTime = 60 * 60; 
+        let timer;
+        let isRunning = false;
+
+        function updateDisplay() {
+            let minutes = Math.floor(totalTime / 60);
+            let seconds = totalTime % 60;
+            document.getElementById("time").textContent =
+                `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+            isRunning = true;
+            timer = setInterval(() => {
+                if (totalTime > 0) {
+                    totalTime--;
+                    updateDisplay();
+                } else {
+                    clearInterval(timer);
+                    alert("Time is up!");
+                }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timer);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            totalTime = 60 * 60;
+            isRunning = false;
+            updateDisplay();
+        }
+    </script>
+
+    </div>
+     <br>
+    <div class="second">
+        <h3>What You Need (per team)</h3>
+        <ul>
+            <li>20 straws or 10 paper sheets</li>
+            <li>Tape</li>
+            <li>String</li>
+            <li>Scissors</li>
+            <li>One small object (coin/eraser)</li>
+        </ul>
+    </div>
+<br>
+    <div class="third">
+        <h3>Simple Rules</h3>
+        <ol>
+            <li>Your tower must stand on its own</li>
+            <li>It must hold the object at the top</li>
+            <li>It must stay up for 10 seconds</li>
+            <li>Use only the materials given.</li>
+        </ol>
+    </div>
+<br>
+    <div class="container">
+    <h3>Today Plan</h3>
+    
+    <div class="plan-item">0-5 min: Teacher explains the challenge</div>
+    <div class="plan-item">5-15 min: Team plan and quick sketch</div>
+    <div class="plan-item">15-35 min: Build your first tower</div>
+    <div class="plan-item">35-45 min: Test and improve</div>
+    <div class="plan-item">45-55 min: Final build time</div>
+    <div class="plan-item">55-60 min: Final test and class winners</div>
+</div>
+    
+    <script>
+        const items = document.querySelectorAll('.plan-item');
+
+        items.forEach(item => {
+         item.addEventListener('click', function() {
+          
+        this.classList.toggle('active');
+      });
+  });
+    </script>
+
+
+    <div class="score-container">
+        <h3>Optional Team Score</h3><br>
+        <div class="score-row">
+        <div class="score-item">
+            <label for="height">Height (0-10)</label>
+            <input type="number" id="height" min="0" max="10" value="0" />
+        </div>
+        <div class="score-item">
+            <label for="stability">Stability (0-10)</label>
+          <input type="number" id="stability" min="0" max="10" value="0" />
+        </div>
+    </div>
+
+        <div class="score-row">
+            <div class="score-item">
+                <label for="creativity">Creativity (0-5)</label>
+                <input type="number" id="creativity" min="0" max="5" value="0" />
+            </div>
+        <div class="score-item">
+            <label for="teamwork">Teamwork (0-5)</label>
+            <input type="number" id="teamwork" min="0" max="5" value="0" />
+        </div>
+    </div>
+
+    <div class="total">Total: <span id="total-score">0</span> / 30</div>
+</div>
+</div>
+
+<script>
+    const heightInput = document.getElementById('height');
+    const stabilityInput = document.getElementById('stability');
+    const creativityInput = document.getElementById('creativity');
+    const teamworkInput = document.getElementById('teamwork');
+    const totalScore = document.getElementById('total-score');
+
+    function calculateTotal() {
+        const height = parseInt(heightInput.value) || 0;
+        const stability = parseInt(stabilityInput.value) || 0;
+        const creativity = parseInt(creativityInput.value) || 0;
+        const teamwork = parseInt(teamworkInput.value) || 0;
+
+        const total = height + stability + creativity + teamwork;
+
+        totalScore.textContent = total;
+    }
+
+    [heightInput, stabilityInput, creativityInput, teamworkInput].forEach(input => {
+        input.addEventListener('input', calculateTotal);
+    });
+
+    calculateTotal();
+</script>
+</body>
+</html>
